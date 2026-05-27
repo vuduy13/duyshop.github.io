@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LoTus Shop</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f0f0f;
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      padding: 20px;
+      background: linear-gradient(90deg, black, red);
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .card {
+      background: #1a1a1a;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 15px;
+      display: inline-block;
+      width: 250px;
+      box-shadow: 0 0 15px red;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px red;
+    }
+
+    button {
+      background: red;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #ff3333;
+    }
+
+    .contact {
+      margin-top: 30px;
+      font-size: 18px;
+    }
+
+    a {
+      color: red;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  🔥 LoTus Shop 🔥
+  <div style="font-size:14px;">Acc Free Fire & Liên Quân</div>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>Acc Free Fire VIP</h2>
+    <p>Giá: 50k - 10tr</p>
+    <button onclick="buy()">Mua ngay</button>
+  </div>
+
+  <div class="card">
+    <h2>Acc Liên Quân VIP</h2>
+    <p>Giá: 50k - 10tr</p>
+    <button onclick="buy()">Mua ngay</button>
+  </div>
+
+  <div class="card">
+    <h2>Acc Random</h2>
+    <p>Giá rẻ bất ngờ</p>
+    <button onclick="buy()">Mua ngay</button>
+  </div>
+
+</div>
+
+<div class="contact">
+  📱 Liên hệ Zalo: 
+  <a href="https://zalo.me/0896597443">0896597443</a>
+</div>
+
+<script>
+function buy() {
+  alert("Liên hệ Zalo: 0896597443 để mua acc!");
+}
+</script>
+
+</body>
+</html>
