@@ -3,37 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShopBacGau</title>
+<title>ShopBacGau VIP</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#0a0a0a;color:white;text-align:center;}
-button{padding:10px;border:none;border-radius:10px;background:#00e5ff;color:black;margin:5px;}
-input{padding:10px;border-radius:10px;border:none;margin:5px;width:70%;}
-.screen{display:none;}
-.active{display:block;}
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;text-align:center;
+}
 
-.card{background:#141414;margin:10px;padding:10px;border-radius:15px;box-shadow:0 0 10px #00e5ff;}
-.card:hover{transform:scale(1.05);}
+button{
+padding:10px;border:none;border-radius:10px;
+background:#00e5ff;color:black;margin:5px;font-weight:bold;
+}
+
+input{
+padding:10px;border-radius:10px;border:none;margin:5px;width:70%;
+}
+
+.card{
+background:#000000aa;margin:10px;padding:10px;
+border-radius:15px;box-shadow:0 0 10px #00e5ff;
+}
+
 img{width:100%;border-radius:10px;}
 
-.page-btn{padding:8px 12px;margin:3px;border-radius:8px;background:#222;color:white;display:inline-block;}
+.page-btn{
+padding:6px 10px;margin:2px;border-radius:6px;
+background:#222;color:white;
+}
 .active-page{background:#00e5ff;color:black;}
 
-.toast{
-position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-background:#00e5ff;color:black;padding:10px 20px;border-radius:10px;
-display:none;
-}
+.screen{display:none;}
+.active{display:block;}
 </style>
 </head>
 
 <body>
 
-<div id="toast" class="toast"></div>
-
 <!-- LOGIN -->
-<div id="login" class="screen active">
-<h2>🐻‍❄️ ShopBacGau</h2>
+<div id="login" class="screen">
+<h2>🐻‍❄️ ShopBacGau VIP</h2>
 <input id="loginUser" placeholder="Tên"><br>
 <input id="loginPass" placeholder="Mật khẩu"><br>
 <button onclick="login()">Đăng nhập</button>
@@ -46,127 +57,150 @@ display:none;
 <input id="regUser"><br>
 <input id="regPass"><br>
 <button onclick="register()">Tạo</button>
+<button onclick="show('login')">⬅️</button>
 </div>
 
 <!-- SHOP -->
 <div id="shop" class="screen">
 <h2>🐻‍❄️ ShopBacGau</h2>
-<p>💰 Ví: <span id="money">0</span>đ</p>
+<p>💰 <span id="money"></span>đ</p>
 
 <button onclick="showFF()">🔥 Free Fire</button>
 <button onclick="showLQ()">⚔️ Liên Quân</button>
-<button onclick="showNap()">💳 Nạp tiền</button>
-<button onclick="spin()">🎰 Quay (50K)</button>
-<button id="adminBtn" onclick="show('admin')" style="display:none;">👑 Admin</button>
-<button onclick="logout()">Đăng xuất</button>
+<button onclick="showRB()">🟫 Roblox</button>
+
+<button onclick="showProfile()">👤 Cá nhân</button>
+<button onclick="logout()">🚪</button>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="screen">
+<h2>👤 Thông tin</h2>
+<p id="info"></p>
+<button onclick="show('shop')">⬅️</button>
 </div>
 
 <!-- LIST -->
 <div id="list" class="screen">
 <h2 id="title"></h2>
-<input id="search" placeholder="Tìm..." oninput="searchAcc()">
-<input id="priceFilter" placeholder="Giá tối đa" oninput="filterAcc()">
 <div id="accList"></div>
-<div id="pagination"></div>
-</div>
-
-<!-- ADMIN -->
-<div id="admin" class="screen">
-<h2>ADMIN</h2>
-<input id="addMoney"><br>
-<button onclick="addMoney()">+ Tiền</button>
-<button onclick="resetAcc()">Reset Acc</button>
-<button onclick="show('shop')">Back</button>
-</div>
-
-<!-- NẠP -->
-<div id="nap" style="display:none;position:fixed;width:100%;height:100%;background:#000a;">
-<div style="background:#1a1a1a;margin:40% auto;padding:20px;width:80%;border-radius:15px;">
-<h3>Nạp tiền</h3>
-<input id="amount"><br>
-<button onclick="nap()">Xác nhận</button>
-<button onclick="closeNap()">Đóng</button>
-</div>
+<div id="page"></div>
+<button onclick="show('shop')">⬅️</button>
 </div>
 
 <script>
 
-// TOAST
-function toast(t){
-let el=document.getElementById("toast");
-el.innerText=t;
-el.style.display="block";
-setTimeout(()=>el.style.display="none",2000);
-}
+// AUTO LOGIN
+let currentUser = localStorage.getItem("lastUser");
 
-// AUTH
-let currentUser=null;
+// ADMIN
+const ADMIN_USER="admin";
+const ADMIN_PASS="123456";
 
-function register(){
-localStorage.setItem("acc_"+regUser.value,regPass.value);
-toast("OK");
-show("login");
-}
+// LOAD USER
+function load(){return JSON.parse(localStorage.getItem("user_"+currentUser));}
+function save(d){localStorage.setItem("user_"+currentUser,JSON.stringify(d));}
 
+// LOGIN
 function login(){
 let u=loginUser.value,p=loginPass.value;
 
-if(u=="admin"&&p=="123456"){
-currentUser="admin";
-adminBtn.style.display="block";
-}else if(localStorage.getItem("acc_"+u)==p){
+if(u==ADMIN_USER && p==ADMIN_PASS){
 currentUser=u;
-}else{toast("Sai");return;}
+localStorage.setItem("lastUser",u);
+
+if(!localStorage.getItem("user_"+u)){
+localStorage.setItem("user_"+u,JSON.stringify({
+money:10000000000,
+ff:genFF(),
+lq:genLQ(),
+rb:genRB()
+}));
+}
+
+show("shop");
+updateMoney();
+return;
+}
+
+if(localStorage.getItem("acc_"+u)==p){
+currentUser=u;
+localStorage.setItem("lastUser",u);
 
 if(!localStorage.getItem("user_"+u)){
 localStorage.setItem("user_"+u,JSON.stringify({
 money:0,
 ff:genFF(),
-lq:genLQ()
+lq:genLQ(),
+rb:genRB()
 }));
 }
 
-updateMoney();
 show("shop");
+updateMoney();
+}else alert("Sai");
 }
 
-function logout(){show("login");}
+// REGISTER
+function register(){
+localStorage.setItem("acc_"+regUser.value,regPass.value);
+alert("OK");
+show("login");
+}
 
-// DATA
-function load(){return JSON.parse(localStorage.getItem("user_"+currentUser));}
-function save(d){localStorage.setItem("user_"+currentUser,JSON.stringify(d));}
+// LOGOUT
+function logout(){
+localStorage.removeItem("lastUser");
+show("login");
+}
 
+// MONEY
 function updateMoney(){money.innerText=load().money;}
 
-// ACC
+// PROFILE
+function showProfile(){
+info.innerText="User: "+currentUser+" | Tiền: "+load().money;
+show("profile");
+}
+
+// GEN ACC
 function genFF(){
 let arr=[];
-for(let i=1;i<=100;i++){
-arr.push({id:"FF"+i,price:100000+i*1000,acc:"FF"+i,pass:"123",img:"https://source.unsplash.com/300x200/?freefire"});
+for(let i=1;i<=50;i++){
+arr.push({id:"FF"+i,price:100000,img:"https://i.imgur.com/3ZQ3Z4K.jpg"});
 }
 return arr;
 }
 function genLQ(){
 let arr=[];
-for(let i=1;i<=100;i++){
-arr.push({id:"LQ"+i,price:150000+i*1000,acc:"LQ"+i,pass:"123",img:"https://source.unsplash.com/300x200/?arena-of-valor"});
+for(let i=1;i<=50;i++){
+arr.push({id:"LQ"+i,price:150000,img:"https://i.imgur.com/8Qf7YkC.jpg"});
+}
+return arr;
+}
+function genRB(){
+let arr=[];
+for(let i=1;i<=50;i++){
+arr.push({id:"RB"+i,price:200000,img:"https://i.imgur.com/6RL9J0K.jpg"});
 }
 return arr;
 }
 
 // LIST
-let data=[],view=[],page=1,per=10,type="ff";
+let data=[],pageIndex=1;
 
-function showFF(){type="ff";data=load().ff;view=[...data];title.innerText="Free Fire";render();show("list");}
-function showLQ(){type="lq";data=load().lq;view=[...data];title.innerText="Liên Quân";render();show("list");}
+function showFF(){data=load().ff;title.innerText="Free Fire";render();show("list");}
+function showLQ(){data=load().lq;title.innerText="Liên Quân";render();show("list");}
+function showRB(){data=load().rb;title.innerText="Roblox";render();show("list");}
 
 function render(){
-let start=(page-1)*per;
-let list=view.slice(start,start+per);
+let start=(pageIndex-1)*10;
+let list=data.slice(start,start+10);
 
 let html="";
 list.forEach(a=>{
-html+=`<div class="card">
+html+=`
+<div class="card">
 <img src="${a.img}">
 <h3>${a.id}</h3>
 <p>${a.price}đ</p>
@@ -174,79 +208,48 @@ html+=`<div class="card">
 </div>`;
 });
 accList.innerHTML=html;
-renderPage();
-}
 
-function renderPage(){
-let total=Math.ceil(view.length/per);
-let html="";
+let total=Math.ceil(data.length/10);
+let p="";
 for(let i=1;i<=total;i++){
-html+=`<span class="page-btn ${i==page?'active-page':''}" onclick="go(${i})">${i}</span>`;
+p+=`<span class="page-btn ${i==pageIndex?'active-page':''}" onclick="go(${i})">${i}</span>`;
 }
-pagination.innerHTML=html;
+page.innerHTML=p;
 }
-function go(p){page=p;render();}
 
-// SEARCH + FILTER
-function searchAcc(){
-let v=search.value.toLowerCase();
-view=data.filter(a=>a.id.toLowerCase().includes(v));
-page=1;render();
-}
-function filterAcc(){
-let v=parseInt(priceFilter.value)||99999999;
-view=data.filter(a=>a.price<=v);
-page=1;render();
-}
+function go(p){pageIndex=p;render();}
 
 // BUY
 function buy(id){
 let d=load();
-let list=type=="ff"?d.ff:d.lq;
+let list=d.ff.concat(d.lq,d.rb);
 let acc=list.find(a=>a.id==id);
 
-if(!acc){toast("Hết");return;}
-if(d.money<acc.price){toast("Không đủ tiền");return;}
+if(d.money<acc.price){alert("Không đủ tiền");return;}
 
 d.money-=acc.price;
-if(type=="ff"){d.ff=d.ff.filter(a=>a.id!=id);}
-else{d.lq=d.lq.filter(a=>a.id!=id);}
+
+d.ff=d.ff.filter(a=>a.id!=id);
+d.lq=d.lq.filter(a=>a.id!=id);
+d.rb=d.rb.filter(a=>a.id!=id);
 
 save(d);
-toast("Mua thành công");
 updateMoney();
-}
-
-// NẠP
-function showNap(){nap.style.display="block";}
-function closeNap(){nap.style.display="none";}
-function nap(){
-let d=load();
-d.money+=parseInt(amount.value||0);
-save(d);
-updateMoney();
-toast("Nạp OK");
-closeNap();
-}
-
-// ADMIN
-function addMoney(){
-let d=load();
-d.money+=parseInt(addMoney.value||0);
-save(d);
-updateMoney();
-}
-function resetAcc(){
-let d=load();
-d.ff=genFF(); d.lq=genLQ();
-save(d);
-toast("Reset");
+alert("Mua thành công");
 }
 
 // NAV
 function show(id){
 document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
+}
+
+// AUTO LOGIN START
+if(currentUser){
+show("shop");
+updateMoney();
+}else{
+show("login");
 }
 
 </script>
