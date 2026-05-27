@@ -3,28 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LoTus Shop Ultimate</title>
+<title>LoTus Shop</title>
 
 <style>
 body{
   margin:0;
   font-family:Arial;
-  background:#0a0a0a;
+  background:#0b0b0b;
   color:white;
-  text-align:center;
 }
 
 header{
+  text-align:center;
   padding:15px;
-  background:linear-gradient(90deg,black,red);
-  font-size:22px;
-}
-
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  padding:10px;
-  font-size:14px;
+  background:linear-gradient(90deg,#000,#ff0000);
+  font-size:24px;
 }
 
 .container{
@@ -35,11 +28,17 @@ header{
 
 .card{
   background:#141414;
-  border-radius:15px;
-  padding:10px;
   margin:10px;
-  width:200px;
-  box-shadow:0 0 10px red;
+  padding:10px;
+  width:220px;
+  border-radius:15px;
+  box-shadow:0 0 20px red;
+  transition:0.3s;
+  cursor:pointer;
+}
+
+.card:hover{
+  transform:scale(1.05);
 }
 
 .card img{
@@ -47,7 +46,15 @@ header{
   border-radius:10px;
 }
 
-.price{color:red;}
+.price{
+  color:#ff3b3b;
+  font-weight:bold;
+}
+
+.badge{
+  font-size:12px;
+  color:#00ff88;
+}
 
 button{
   margin-top:5px;
@@ -56,8 +63,10 @@ button{
   border-radius:10px;
   background:red;
   color:white;
+  width:100%;
 }
 
+/* popup */
 .modal{
   display:none;
   position:fixed;
@@ -70,102 +79,91 @@ button{
   background:#1a1a1a;
   margin:20% auto;
   padding:20px;
-  width:80%;
+  width:85%;
   border-radius:15px;
+  text-align:center;
 }
 
-.login{
-  margin-top:10px;
-}
 </style>
 </head>
 
 <body>
 
-<header>🔥 LoTus Shop Ultimate 🔥</header>
-
-<div class="topbar">
-  <div id="user">Chưa đăng nhập</div>
-  <div>💰 Ví: <span id="money">0</span>đ</div>
-</div>
-
-<div class="login">
-  <button onclick="login()">Đăng nhập</button>
-</div>
+<header>🔥 LoTus Shop 🔥</header>
 
 <div class="container">
 
-<div class="card">
-  <img src="https://i.imgur.com/3ZQ3ZQX.jpg">
-  <h3>Acc FF VIP</h3>
-  <p class="price">500K</p>
-  <button onclick="openAcc('ACC001','FF VIP','Full skin','500000')">Xem</button>
+<div class="card" onclick="openAcc('ACC001','Free Fire VIP','Full skin súng + rank cao','500000','https://picsum.photos/300?1')">
+<img src="https://picsum.photos/300?1">
+<h3>Acc FF VIP</h3>
+<p class="price">500K</p>
+<div class="badge">✔ Còn hàng</div>
+<button>Xem</button>
 </div>
 
-<div class="card">
-  <img src="https://i.imgur.com/8Km9tLL.jpg">
-  <h3>Acc LQ VIP</h3>
-  <p class="price">800K</p>
-  <button onclick="openAcc('ACC002','LQ VIP','Full tướng','800000')">Xem</button>
+<div class="card" onclick="openAcc('ACC002','Free Fire Siêu VIP','Full skin hiếm','1000000','https://picsum.photos/300?2')">
+<img src="https://picsum.photos/300?2">
+<h3>Acc FF Siêu VIP</h3>
+<p class="price">1TR</p>
+<div class="badge">✔ Còn hàng</div>
+<button>Xem</button>
+</div>
+
+<div class="card" onclick="openAcc('ACC003','Liên Quân VIP','Full tướng + skin','800000','https://picsum.photos/300?3')">
+<img src="https://picsum.photos/300?3">
+<h3>Acc LQ VIP</h3>
+<p class="price">800K</p>
+<div class="badge">✔ Còn hàng</div>
+<button>Xem</button>
 </div>
 
 </div>
 
+<div style="text-align:center;margin:20px;">
 <button onclick="randomAcc()">🎁 Random Acc (50K)</button>
+</div>
 
 <!-- popup -->
 <div id="modal" class="modal">
   <div class="modal-content">
     <h2 id="name"></h2>
+    <img id="img" style="width:100%;border-radius:10px;">
     <p id="desc"></p>
     <p id="price"></p>
 
-    <button onclick="pay()">Thanh toán</button>
-    <button onclick="zalo()">Zalo</button>
+    <button onclick="fakePay()">💳 Thanh toán</button>
+    <button onclick="zalo()">📱 Liên hệ Zalo</button>
   </div>
 </div>
 
 <script>
-let currentPrice = 0;
-let balance = 0;
+let currentPrice=0;
 
-function login(){
-  let name = prompt("Nhập tên:");
-  if(name){
-    document.getElementById("user").innerText = name;
-    balance = 1000000;
-    document.getElementById("money").innerText = balance;
-  }
-}
-
-function openAcc(id,name,desc,price){
+function openAcc(id,name,desc,price,img){
   document.getElementById("modal").style.display="block";
   document.getElementById("name").innerText=name+" ("+id+")";
   document.getElementById("desc").innerText=desc;
   document.getElementById("price").innerText="Giá: "+price+"đ";
-  currentPrice = price;
+  document.getElementById("img").src=img;
+  currentPrice=price;
 }
 
-function pay(){
-  if(balance >= currentPrice){
-    balance -= currentPrice;
-    document.getElementById("money").innerText = balance;
-    alert("Thanh toán thành công!");
-  } else {
-    alert("Không đủ tiền!");
-  }
-}
-
-function randomAcc(){
-  alert("Bạn nhận được acc random! Liên hệ Zalo để nhận.");
+function fakePay(){
+  alert("Thanh toán thành công! (fake 😎)");
 }
 
 function zalo(){
   window.location.href="https://zalo.me/0896597443";
 }
 
-window.onclick = function(e){
-  if(e.target == document.getElementById("modal")){
+function randomAcc(){
+  let list=["ACC RANDOM VIP","ACC MAY MẮN","ACC SIÊU HIẾM"];
+  let pick=list[Math.floor(Math.random()*list.length)];
+  alert("Bạn nhận được: "+pick);
+}
+
+window.onclick=function(e){
+  if(e.target==document.getElementById("modal")){
     document.getElementById("modal").style.display="none";
   }
 }
