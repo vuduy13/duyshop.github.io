@@ -1,109 +1,173 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LoTus Shop</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoTus Shop Ultimate</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0f0f0f;
-      color: white;
-      text-align: center;
-    }
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0a0a0a;
+  color:white;
+  text-align:center;
+}
 
-    header {
-      padding: 20px;
-      background: linear-gradient(90deg, black, red);
-      font-size: 24px;
-      font-weight: bold;
-    }
+header{
+  padding:15px;
+  background:linear-gradient(90deg,black,red);
+  font-size:22px;
+}
 
-    .container {
-      padding: 20px;
-    }
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+  font-size:14px;
+}
 
-    .card {
-      background: #1a1a1a;
-      border-radius: 15px;
-      padding: 20px;
-      margin: 15px;
-      display: inline-block;
-      width: 250px;
-      box-shadow: 0 0 15px red;
-      transition: 0.3s;
-    }
+.container{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+}
 
-    .card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px red;
-    }
+.card{
+  background:#141414;
+  border-radius:15px;
+  padding:10px;
+  margin:10px;
+  width:200px;
+  box-shadow:0 0 10px red;
+}
 
-    button {
-      background: red;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
+.card img{
+  width:100%;
+  border-radius:10px;
+}
 
-    button:hover {
-      background: #ff3333;
-    }
+.price{color:red;}
 
-    .contact {
-      margin-top: 30px;
-      font-size: 18px;
-    }
+button{
+  margin-top:5px;
+  padding:8px;
+  border:none;
+  border-radius:10px;
+  background:red;
+  color:white;
+}
 
-    a {
-      color: red;
-      text-decoration: none;
-    }
-  </style>
+.modal{
+  display:none;
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+}
+
+.modal-content{
+  background:#1a1a1a;
+  margin:20% auto;
+  padding:20px;
+  width:80%;
+  border-radius:15px;
+}
+
+.login{
+  margin-top:10px;
+}
+</style>
 </head>
 
 <body>
 
-<header>
-  🔥 LoTus Shop 🔥
-  <div style="font-size:14px;">Acc Free Fire & Liên Quân</div>
-</header>
+<header>🔥 LoTus Shop Ultimate 🔥</header>
+
+<div class="topbar">
+  <div id="user">Chưa đăng nhập</div>
+  <div>💰 Ví: <span id="money">0</span>đ</div>
+</div>
+
+<div class="login">
+  <button onclick="login()">Đăng nhập</button>
+</div>
 
 <div class="container">
 
-  <div class="card">
-    <h2>Acc Free Fire VIP</h2>
-    <p>Giá: 50k - 10tr</p>
-    <button onclick="buy()">Mua ngay</button>
-  </div>
+<div class="card">
+  <img src="https://i.imgur.com/3ZQ3ZQX.jpg">
+  <h3>Acc FF VIP</h3>
+  <p class="price">500K</p>
+  <button onclick="openAcc('ACC001','FF VIP','Full skin','500000')">Xem</button>
+</div>
 
-  <div class="card">
-    <h2>Acc Liên Quân VIP</h2>
-    <p>Giá: 50k - 10tr</p>
-    <button onclick="buy()">Mua ngay</button>
-  </div>
-
-  <div class="card">
-    <h2>Acc Random</h2>
-    <p>Giá rẻ bất ngờ</p>
-    <button onclick="buy()">Mua ngay</button>
-  </div>
+<div class="card">
+  <img src="https://i.imgur.com/8Km9tLL.jpg">
+  <h3>Acc LQ VIP</h3>
+  <p class="price">800K</p>
+  <button onclick="openAcc('ACC002','LQ VIP','Full tướng','800000')">Xem</button>
+</div>
 
 </div>
 
-<div class="contact">
-  📱 Liên hệ Zalo: 
-  <a href="https://zalo.me/0896597443">0896597443</a>
+<button onclick="randomAcc()">🎁 Random Acc (50K)</button>
+
+<!-- popup -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <h2 id="name"></h2>
+    <p id="desc"></p>
+    <p id="price"></p>
+
+    <button onclick="pay()">Thanh toán</button>
+    <button onclick="zalo()">Zalo</button>
+  </div>
 </div>
 
 <script>
-function buy() {
-  alert("Liên hệ Zalo: 0896597443 để mua acc!");
+let currentPrice = 0;
+let balance = 0;
+
+function login(){
+  let name = prompt("Nhập tên:");
+  if(name){
+    document.getElementById("user").innerText = name;
+    balance = 1000000;
+    document.getElementById("money").innerText = balance;
+  }
+}
+
+function openAcc(id,name,desc,price){
+  document.getElementById("modal").style.display="block";
+  document.getElementById("name").innerText=name+" ("+id+")";
+  document.getElementById("desc").innerText=desc;
+  document.getElementById("price").innerText="Giá: "+price+"đ";
+  currentPrice = price;
+}
+
+function pay(){
+  if(balance >= currentPrice){
+    balance -= currentPrice;
+    document.getElementById("money").innerText = balance;
+    alert("Thanh toán thành công!");
+  } else {
+    alert("Không đủ tiền!");
+  }
+}
+
+function randomAcc(){
+  alert("Bạn nhận được acc random! Liên hệ Zalo để nhận.");
+}
+
+function zalo(){
+  window.location.href="https://zalo.me/0896597443";
+}
+
+window.onclick = function(e){
+  if(e.target == document.getElementById("modal")){
+    document.getElementById("modal").style.display="none";
+  }
 }
 </script>
 
