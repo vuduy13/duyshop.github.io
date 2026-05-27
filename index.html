@@ -3,301 +3,250 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LoTus Shop</title>
+<title>ShopBacGau</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
+body{margin:0;font-family:Arial;background:#0a0a0a;color:white;text-align:center;}
+button{padding:10px;border:none;border-radius:10px;background:#00e5ff;color:black;margin:5px;}
+input{padding:10px;border-radius:10px;border:none;margin:5px;width:70%;}
+.screen{display:none;}
+.active{display:block;}
 
-body{
-background:#070707;
-color:white;
-}
+.card{background:#141414;margin:10px;padding:10px;border-radius:15px;box-shadow:0 0 10px #00e5ff;}
+.card:hover{transform:scale(1.05);}
+img{width:100%;border-radius:10px;}
 
-header{
-background:linear-gradient(90deg,#000,#ff0000);
-padding:18px;
-text-align:center;
-font-size:28px;
-font-weight:bold;
-box-shadow:0 0 20px red;
-}
+.page-btn{padding:8px 12px;margin:3px;border-radius:8px;background:#222;color:white;display:inline-block;}
+.active-page{background:#00e5ff;color:black;}
 
-.banner{
-margin:15px;
-background:#111;
-border-radius:20px;
-padding:25px;
-text-align:center;
-box-shadow:0 0 20px rgba(255,0,0,0.5);
-}
-
-.banner h2{
-font-size:30px;
-margin-bottom:10px;
-}
-
-.banner p{
-color:#ccc;
-}
-
-.menu{
-display:flex;
-justify-content:center;
-gap:10px;
-margin:20px;
-flex-wrap:wrap;
-}
-
-.menu button{
-padding:10px 18px;
-border:none;
-border-radius:12px;
-background:#151515;
-color:white;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
-}
-
-.menu button:hover{
-background:red;
-transform:scale(1.05);
-}
-
-.container{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-padding:20px;
-}
-
-.card{
-background:#121212;
-border-radius:20px;
-overflow:hidden;
-box-shadow:0 0 15px rgba(255,0,0,0.4);
-transition:0.3s;
-cursor:pointer;
-}
-
-.card:hover{
-transform:translateY(-8px);
-box-shadow:0 0 25px red;
-}
-
-.card img{
-width:100%;
-height:220px;
-object-fit:cover;
-}
-
-.card-content{
-padding:15px;
-}
-
-.price{
-color:#ff3b3b;
-font-size:22px;
-font-weight:bold;
-margin:10px 0;
-}
-
-.status{
-color:#00ff88;
-font-size:14px;
-}
-
-.buy{
-width:100%;
-padding:10px;
-border:none;
-border-radius:12px;
-background:red;
-color:white;
-font-weight:bold;
-margin-top:10px;
-}
-
-.modal{
+.toast{
+position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+background:#00e5ff;color:black;padding:10px 20px;border-radius:10px;
 display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.9);
-z-index:999;
-}
-
-.modal-content{
-background:#141414;
-width:90%;
-max-width:400px;
-margin:10% auto;
-border-radius:20px;
-overflow:hidden;
-box-shadow:0 0 30px red;
-animation:show 0.3s;
-}
-
-@keyframes show{
-from{
-transform:scale(0.8);
-opacity:0;
-}
-to{
-transform:scale(1);
-opacity:1;
-}
-}
-
-.modal img{
-width:100%;
-height:250px;
-object-fit:cover;
-}
-
-.modal-body{
-padding:20px;
-text-align:center;
-}
-
-.close{
-position:absolute;
-right:20px;
-top:15px;
-font-size:30px;
-cursor:pointer;
-}
-
-footer{
-text-align:center;
-padding:20px;
-color:#888;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-🔥 LoTus Shop 🔥
-</header>
+<div id="toast" class="toast"></div>
 
-<div class="banner">
-<h2>SHOP ACC GAMING</h2>
-<p>Free Fire • Liên Quân • Random Acc</p>
+<!-- LOGIN -->
+<div id="login" class="screen active">
+<h2>🐻‍❄️ ShopBacGau</h2>
+<input id="loginUser" placeholder="Tên"><br>
+<input id="loginPass" placeholder="Mật khẩu"><br>
+<button onclick="login()">Đăng nhập</button>
+<p onclick="show('register')">Đăng ký</p>
 </div>
 
-<div class="menu">
-<button>Tất cả</button>
-<button>Free Fire</button>
-<button>Liên Quân</button>
-<button>Random</button>
+<!-- REGISTER -->
+<div id="register" class="screen">
+<h2>Đăng ký</h2>
+<input id="regUser"><br>
+<input id="regPass"><br>
+<button onclick="register()">Tạo</button>
 </div>
 
-<div class="container">
+<!-- SHOP -->
+<div id="shop" class="screen">
+<h2>🐻‍❄️ ShopBacGau</h2>
+<p>💰 Ví: <span id="money">0</span>đ</p>
 
-<div class="card"
-onclick="openAcc(
-'ACC001',
-'Free Fire VIP',
-'Full skin súng + rank cao',
-'500K',
-'https://picsum.photos/500?1'
-)">
-<img src="https://picsum.photos/500?1">
-<div class="card-content">
-<h3>Acc FF VIP</h3>
-<div class="price">500K</div>
-<div class="status">✔ Còn hàng</div>
-<button class="buy">Xem chi tiết</button>
-</div>
+<button onclick="showFF()">🔥 Free Fire</button>
+<button onclick="showLQ()">⚔️ Liên Quân</button>
+<button onclick="showNap()">💳 Nạp tiền</button>
+<button onclick="spin()">🎰 Quay (50K)</button>
+<button id="adminBtn" onclick="show('admin')" style="display:none;">👑 Admin</button>
+<button onclick="logout()">Đăng xuất</button>
 </div>
 
-<div class="card"
-onclick="openAcc(
-'ACC002',
-'Liên Quân VIP',
-'Full tướng + skin hiếm',
-'800K',
-'https://picsum.photos/500?2'
-)">
-<img src="https://picsum.photos/500?2">
-<div class="card-content">
-<h3>Acc LQ VIP</h3>
-<div class="price">800K</div>
-<div class="status">✔ Còn hàng</div>
-<button class="buy">Xem chi tiết</button>
-</div>
+<!-- LIST -->
+<div id="list" class="screen">
+<h2 id="title"></h2>
+<input id="search" placeholder="Tìm..." oninput="searchAcc()">
+<input id="priceFilter" placeholder="Giá tối đa" oninput="filterAcc()">
+<div id="accList"></div>
+<div id="pagination"></div>
 </div>
 
+<!-- ADMIN -->
+<div id="admin" class="screen">
+<h2>ADMIN</h2>
+<input id="addMoney"><br>
+<button onclick="addMoney()">+ Tiền</button>
+<button onclick="resetAcc()">Reset Acc</button>
+<button onclick="show('shop')">Back</button>
 </div>
 
-<div id="modal" class="modal">
-<div class="modal-content">
-
-<span class="close" onclick="closeModal()">&times;</span>
-
-<img id="modalImg">
-
-<div class="modal-body">
-<h2 id="modalName"></h2>
-<p id="modalDesc"></p>
-
-<div class="price" id="modalPrice"></div>
-
-<button class="buy" onclick="fakePay()">
-💳 Thanh toán
-</button>
-
-<button class="buy"
-onclick="window.location.href='https://zalo.me/0896597443'">
-📱 Liên hệ Zalo
-</button>
-
+<!-- NẠP -->
+<div id="nap" style="display:none;position:fixed;width:100%;height:100%;background:#000a;">
+<div style="background:#1a1a1a;margin:40% auto;padding:20px;width:80%;border-radius:15px;">
+<h3>Nạp tiền</h3>
+<input id="amount"><br>
+<button onclick="nap()">Xác nhận</button>
+<button onclick="closeNap()">Đóng</button>
 </div>
 </div>
-</div>
-
-<footer>
-LoTus Shop Ultimate ©
-</footer>
 
 <script>
 
-function openAcc(id,name,desc,price,img){
-
-document.getElementById("modal").style.display="block";
-
-document.getElementById("modalImg").src=img;
-
-document.getElementById("modalName").innerText=
-name + " (" + id + ")";
-
-document.getElementById("modalDesc").innerText=desc;
-
-document.getElementById("modalPrice").innerText=price;
-
+// TOAST
+function toast(t){
+let el=document.getElementById("toast");
+el.innerText=t;
+el.style.display="block";
+setTimeout(()=>el.style.display="none",2000);
 }
 
-function closeModal(){
-document.getElementById("modal").style.display="none";
+// AUTH
+let currentUser=null;
+
+function register(){
+localStorage.setItem("acc_"+regUser.value,regPass.value);
+toast("OK");
+show("login");
 }
 
-function fakePay(){
-alert("Thanh toán thành công 😎");
+function login(){
+let u=loginUser.value,p=loginPass.value;
+
+if(u=="admin"&&p=="123456"){
+currentUser="admin";
+adminBtn.style.display="block";
+}else if(localStorage.getItem("acc_"+u)==p){
+currentUser=u;
+}else{toast("Sai");return;}
+
+if(!localStorage.getItem("user_"+u)){
+localStorage.setItem("user_"+u,JSON.stringify({
+money:0,
+ff:genFF(),
+lq:genLQ()
+}));
 }
 
-window.onclick=function(e){
-if(e.target==document.getElementById("modal")){
-closeModal();
+updateMoney();
+show("shop");
 }
+
+function logout(){show("login");}
+
+// DATA
+function load(){return JSON.parse(localStorage.getItem("user_"+currentUser));}
+function save(d){localStorage.setItem("user_"+currentUser,JSON.stringify(d));}
+
+function updateMoney(){money.innerText=load().money;}
+
+// ACC
+function genFF(){
+let arr=[];
+for(let i=1;i<=100;i++){
+arr.push({id:"FF"+i,price:100000+i*1000,acc:"FF"+i,pass:"123",img:"https://source.unsplash.com/300x200/?freefire"});
+}
+return arr;
+}
+function genLQ(){
+let arr=[];
+for(let i=1;i<=100;i++){
+arr.push({id:"LQ"+i,price:150000+i*1000,acc:"LQ"+i,pass:"123",img:"https://source.unsplash.com/300x200/?arena-of-valor"});
+}
+return arr;
+}
+
+// LIST
+let data=[],view=[],page=1,per=10,type="ff";
+
+function showFF(){type="ff";data=load().ff;view=[...data];title.innerText="Free Fire";render();show("list");}
+function showLQ(){type="lq";data=load().lq;view=[...data];title.innerText="Liên Quân";render();show("list");}
+
+function render(){
+let start=(page-1)*per;
+let list=view.slice(start,start+per);
+
+let html="";
+list.forEach(a=>{
+html+=`<div class="card">
+<img src="${a.img}">
+<h3>${a.id}</h3>
+<p>${a.price}đ</p>
+<button onclick="buy('${a.id}')">Mua</button>
+</div>`;
+});
+accList.innerHTML=html;
+renderPage();
+}
+
+function renderPage(){
+let total=Math.ceil(view.length/per);
+let html="";
+for(let i=1;i<=total;i++){
+html+=`<span class="page-btn ${i==page?'active-page':''}" onclick="go(${i})">${i}</span>`;
+}
+pagination.innerHTML=html;
+}
+function go(p){page=p;render();}
+
+// SEARCH + FILTER
+function searchAcc(){
+let v=search.value.toLowerCase();
+view=data.filter(a=>a.id.toLowerCase().includes(v));
+page=1;render();
+}
+function filterAcc(){
+let v=parseInt(priceFilter.value)||99999999;
+view=data.filter(a=>a.price<=v);
+page=1;render();
+}
+
+// BUY
+function buy(id){
+let d=load();
+let list=type=="ff"?d.ff:d.lq;
+let acc=list.find(a=>a.id==id);
+
+if(!acc){toast("Hết");return;}
+if(d.money<acc.price){toast("Không đủ tiền");return;}
+
+d.money-=acc.price;
+if(type=="ff"){d.ff=d.ff.filter(a=>a.id!=id);}
+else{d.lq=d.lq.filter(a=>a.id!=id);}
+
+save(d);
+toast("Mua thành công");
+updateMoney();
+}
+
+// NẠP
+function showNap(){nap.style.display="block";}
+function closeNap(){nap.style.display="none";}
+function nap(){
+let d=load();
+d.money+=parseInt(amount.value||0);
+save(d);
+updateMoney();
+toast("Nạp OK");
+closeNap();
+}
+
+// ADMIN
+function addMoney(){
+let d=load();
+d.money+=parseInt(addMoney.value||0);
+save(d);
+updateMoney();
+}
+function resetAcc(){
+let d=load();
+d.ff=genFF(); d.lq=genLQ();
+save(d);
+toast("Reset");
+}
+
+// NAV
+function show(id){
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
 }
 
 </script>
