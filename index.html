@@ -3,35 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShopBacGau VIP</title>
+<title>ShopBacGau</title>
 
 <style>
 body{
 margin:0;
 font-family:Arial;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-color:white;text-align:center;
+background:#0f172a;
+color:white;
 }
 
-button{
-padding:10px;border:none;border-radius:10px;
-background:#00e5ff;color:black;margin:5px;font-weight:bold;
+/* HEADER */
+.header{
+background:#020617;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:2px solid #00e5ff;
+}
+.logo{font-weight:bold;font-size:18px;}
+.menu button{
+background:none;border:none;color:white;margin:5px;font-size:14px;
 }
 
-input{
-padding:10px;border-radius:10px;border:none;margin:5px;width:70%;
+/* BANNER */
+.banner{
+height:140px;
+background:url("https://i.imgur.com/Z6X9QpK.jpg") center/cover;
 }
 
+/* MONEY */
+.money{
+padding:10px;
+color:#00e5ff;
+font-weight:bold;
+}
+
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+padding:10px;
+}
+
+/* CARD */
 .card{
-background:#000000aa;margin:10px;padding:10px;
-border-radius:15px;box-shadow:0 0 10px #00e5ff;
+background:#020617;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 0 10px #00e5ff33;
 }
 
-img{width:100%;border-radius:10px;}
+.card img{
+width:100%;
+height:100px;
+object-fit:cover;
+}
 
+.card h3{
+margin:5px;
+font-size:13px;
+}
+
+.price{
+color:#00e5ff;
+font-weight:bold;
+margin:5px;
+}
+
+.buy{
+background:#00e5ff;
+color:black;
+width:90%;
+margin:5px auto 10px;
+display:block;
+border-radius:8px;
+}
+
+/* PAGINATION */
 .page-btn{
-padding:6px 10px;margin:2px;border-radius:6px;
-background:#222;color:white;
+padding:6px 10px;
+margin:2px;
+background:#111;
+border-radius:6px;
 }
 .active-page{background:#00e5ff;color:black;}
 
@@ -43,89 +99,61 @@ background:#222;color:white;
 <body>
 
 <!-- LOGIN -->
-<div id="login" class="screen">
-<h2>🐻‍❄️ ShopBacGau VIP</h2>
-<input id="loginUser" placeholder="Tên"><br>
-<input id="loginPass" placeholder="Mật khẩu"><br>
+<div id="login" class="screen active" style="text-align:center;padding-top:100px;">
+<h2>🐻‍❄️ ShopBacGau</h2>
+<input id="loginUser" placeholder="Tên"><br><br>
+<input id="loginPass" placeholder="Mật khẩu"><br><br>
 <button onclick="login()">Đăng nhập</button>
 <p onclick="show('register')">Đăng ký</p>
 </div>
 
 <!-- REGISTER -->
-<div id="register" class="screen">
+<div id="register" class="screen" style="text-align:center;padding-top:100px;">
 <h2>Đăng ký</h2>
-<input id="regUser"><br>
-<input id="regPass"><br>
+<input id="regUser"><br><br>
+<input id="regPass"><br><br>
 <button onclick="register()">Tạo</button>
 <button onclick="show('login')">⬅️</button>
 </div>
 
 <!-- SHOP -->
 <div id="shop" class="screen">
-<h2>🐻‍❄️ ShopBacGau</h2>
-<p>💰 <span id="money"></span>đ</p>
 
-<button onclick="showFF()">🔥 Free Fire</button>
-<button onclick="showLQ()">⚔️ Liên Quân</button>
-<button onclick="showRB()">🟫 Roblox</button>
-
-<button onclick="showProfile()">👤 Cá nhân</button>
-<button onclick="logout()">🚪</button>
+<div class="header">
+<div class="logo">🐻‍❄️ ShopBacGau</div>
+<div class="menu">
+<button onclick="showFF()">Free Fire</button>
+<button onclick="showLQ()">Liên Quân</button>
+<button onclick="showRB()">Roblox</button>
+<button onclick="logout()">Thoát</button>
+</div>
 </div>
 
-<!-- PROFILE -->
-<div id="profile" class="screen">
-<h2>👤 Thông tin</h2>
-<p id="info"></p>
-<button onclick="show('shop')">⬅️</button>
-</div>
+<div class="banner"></div>
 
-<!-- LIST -->
-<div id="list" class="screen">
-<h2 id="title"></h2>
+<div class="money">💰 <span id="money"></span>đ</div>
+
 <div id="accList"></div>
 <div id="page"></div>
-<button onclick="show('shop')">⬅️</button>
+
 </div>
 
 <script>
 
-// AUTO LOGIN
-let currentUser = localStorage.getItem("lastUser");
+// USER
+let currentUser=null;
 
-// ADMIN
-const ADMIN_USER="admin";
-const ADMIN_PASS="123456";
+function register(){
+localStorage.setItem("acc_"+regUser.value,regPass.value);
+alert("OK");
+show("login");
+}
 
-// LOAD USER
-function load(){return JSON.parse(localStorage.getItem("user_"+currentUser));}
-function save(d){localStorage.setItem("user_"+currentUser,JSON.stringify(d));}
-
-// LOGIN
 function login(){
 let u=loginUser.value,p=loginPass.value;
 
-if(u==ADMIN_USER && p==ADMIN_PASS){
-currentUser=u;
-localStorage.setItem("lastUser",u);
-
-if(!localStorage.getItem("user_"+u)){
-localStorage.setItem("user_"+u,JSON.stringify({
-money:10000000000,
-ff:genFF(),
-lq:genLQ(),
-rb:genRB()
-}));
-}
-
-show("shop");
-updateMoney();
-return;
-}
-
 if(localStorage.getItem("acc_"+u)==p){
 currentUser=u;
-localStorage.setItem("lastUser",u);
 
 if(!localStorage.getItem("user_"+u)){
 localStorage.setItem("user_"+u,JSON.stringify({
@@ -136,32 +164,17 @@ rb:genRB()
 }));
 }
 
-show("shop");
 updateMoney();
+show("shop");
 }else alert("Sai");
 }
 
-// REGISTER
-function register(){
-localStorage.setItem("acc_"+regUser.value,regPass.value);
-alert("OK");
-show("login");
-}
+function logout(){show("login");}
 
-// LOGOUT
-function logout(){
-localStorage.removeItem("lastUser");
-show("login");
-}
-
-// MONEY
+// DATA
+function load(){return JSON.parse(localStorage.getItem("user_"+currentUser));}
+function save(d){localStorage.setItem("user_"+currentUser,JSON.stringify(d));}
 function updateMoney(){money.innerText=load().money;}
-
-// PROFILE
-function showProfile(){
-info.innerText="User: "+currentUser+" | Tiền: "+load().money;
-show("profile");
-}
 
 // GEN ACC
 function genFF(){
@@ -189,24 +202,27 @@ return arr;
 // LIST
 let data=[],pageIndex=1;
 
-function showFF(){data=load().ff;title.innerText="Free Fire";render();show("list");}
-function showLQ(){data=load().lq;title.innerText="Liên Quân";render();show("list");}
-function showRB(){data=load().rb;title.innerText="Roblox";render();show("list");}
+function showFF(){data=load().ff;render();}
+function showLQ(){data=load().lq;render();}
+function showRB(){data=load().rb;render();}
 
 function render(){
 let start=(pageIndex-1)*10;
 let list=data.slice(start,start+10);
 
-let html="";
+let html=`<div class="grid">`;
+
 list.forEach(a=>{
 html+=`
 <div class="card">
 <img src="${a.img}">
 <h3>${a.id}</h3>
-<p>${a.price}đ</p>
-<button onclick="buy('${a.id}')">Mua</button>
+<p class="price">${a.price}đ</p>
+<button class="buy" onclick="buy('${a.id}')">MUA NGAY</button>
 </div>`;
 });
+
+html+=`</div>`;
 accList.innerHTML=html;
 
 let total=Math.ceil(data.length/10);
@@ -222,13 +238,12 @@ function go(p){pageIndex=p;render();}
 // BUY
 function buy(id){
 let d=load();
-let list=d.ff.concat(d.lq,d.rb);
-let acc=list.find(a=>a.id==id);
+let all=[...d.ff,...d.lq,...d.rb];
+let acc=all.find(a=>a.id==id);
 
 if(d.money<acc.price){alert("Không đủ tiền");return;}
 
 d.money-=acc.price;
-
 d.ff=d.ff.filter(a=>a.id!=id);
 d.lq=d.lq.filter(a=>a.id!=id);
 d.rb=d.rb.filter(a=>a.id!=id);
@@ -242,14 +257,6 @@ alert("Mua thành công");
 function show(id){
 document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
-}
-
-// AUTO LOGIN START
-if(currentUser){
-show("shop");
-updateMoney();
-}else{
-show("login");
 }
 
 </script>
